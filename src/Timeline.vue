@@ -12,31 +12,29 @@
       </a>
     </p>
 
-    <a
-      data-test="post"
-      class="panel-block"
-      v-for="post in posts"
-      :key="post.id"
-    >
-      <div>
-        <a>{{ post.title }}</a>
-        <div>{{ post.created.format("Do MM") }}</div>
-      </div>
-    </a>
+    <timeline-post v-for="post in posts" :key="post.id" :post="post" />
   </nav>
 </template>
 
 <script lang="ts">
 import { defineComponent, ref, computed } from "vue";
 import moment from "moment";
+import TimelinePost from "./TimelinePost.vue";
+
 import { Period, Post } from "./types";
 import { todayPost, thisWeek, thisMonth } from "./mocks";
 
+const delay = (ms: number) => new Promise((res) => setTimeout(res, ms));
+
 export default defineComponent({
-  setup() {
+  components: {
+    TimelinePost
+  },
+  async setup() {
     const periods: Period[] = ["today", "this week", "this month"];
     const selectedPeriod = ref<Period>("today");
 
+    await delay(2000);
     const posts = computed(() =>
       [todayPost, thisWeek, thisMonth].filter((post) => {
         if (
