@@ -1,9 +1,24 @@
 import { mount } from "@vue/test-utils";
 import Home from "./Home.vue";
+import flushPromises from "flush-promises";
+import * as mockData from "./mocks";
+
+jest.mock("axios", () => ({
+  get: (url: string) => ({
+    data: [mockData.thisWeek, mockData.todayPost, mockData.thisMonth]
+  })
+}));
 
 describe("Home", () => {
-  it.only("Renders 3 time periods", () => {
+  it("Renders a loader", () => {
     const wrapper = mount(Home);
+
+    expect(wrapper.find('[data-test="progress"]').exists()).toBe(true);
+  });
+
+  it("Renders 3 time periods", async () => {
+    const wrapper = mount(Home);
+    await flushPromises();
     console.log(wrapper.html());
 
     expect(wrapper.findAll('[data-test="period"]')).toHaveLength(3);
@@ -11,6 +26,8 @@ describe("Home", () => {
 
   it("Updates the period when clicked", async () => {
     const wrapper = mount(Home);
+    await flushPromises();
+
     const $today = wrapper.findAll('[data-test="period"]')[0];
     expect($today.classes()).toContain("is-active");
 
@@ -29,6 +46,7 @@ describe("Home", () => {
 
   it("Renders todays post by default", async () => {
     const wrapper = mount(Home);
+    await flushPromises();
 
     expect(wrapper.findAll('[data-test="post"]')).toHaveLength(1);
 
