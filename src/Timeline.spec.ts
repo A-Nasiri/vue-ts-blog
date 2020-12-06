@@ -1,15 +1,16 @@
 import { mount } from "@vue/test-utils";
-import Timeline from "./Timeline.vue";
+import Home from "./Home.vue";
 
-describe("Timeline", () => {
-  it("Renders 3 time periods", () => {
-    const wrapper = mount(Timeline);
+describe("Home", () => {
+  it.only("Renders 3 time periods", () => {
+    const wrapper = mount(Home);
+    console.log(wrapper.html());
 
     expect(wrapper.findAll('[data-test="period"]')).toHaveLength(3);
   });
 
   it("Updates the period when clicked", async () => {
-    const wrapper = mount(Timeline);
+    const wrapper = mount(Home);
     const $today = wrapper.findAll('[data-test="period"]')[0];
     expect($today.classes()).toContain("is-active");
 
@@ -27,7 +28,7 @@ describe("Timeline", () => {
   });
 
   it("Renders todays post by default", async () => {
-    const wrapper = mount(Timeline);
+    const wrapper = mount(Home);
 
     expect(wrapper.findAll('[data-test="post"]')).toHaveLength(1);
 
