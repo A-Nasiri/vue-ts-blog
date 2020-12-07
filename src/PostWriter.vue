@@ -10,11 +10,25 @@
         </div>
       </div>
     </div>
+
+    <div class="columns">
+      <div class="column is-one-half">
+        <div
+          contenteditable
+          id="markdown"
+          ref="contentEditable"
+          @input="handleEdit"
+        />
+      </div>
+      <div class="column is-one-half">
+        {{ markdown }}
+      </div>
+    </div>
   </div>
 </template>
 
 <script lang="ts">
-import { defineComponent, ref } from "vue";
+import { defineComponent, onMounted, ref } from "vue";
 import { Post } from "./types";
 
 export default defineComponent({
@@ -27,9 +41,22 @@ export default defineComponent({
   },
   setup(props) {
     const title = ref(props.post.title);
+    const contentEditable = ref<null | HTMLDivElement>(null);
+    const markdown = ref(props.post.markdown);
+
+    const handleEdit = () => {
+      markdown.value = contentEditable.value.innerText;
+    };
+
+    onMounted(() => {
+      contentEditable.value.innerText = markdown.value;
+    });
 
     return {
-      title
+      title,
+      contentEditable,
+      handleEdit,
+      markdown
     };
   }
 });
